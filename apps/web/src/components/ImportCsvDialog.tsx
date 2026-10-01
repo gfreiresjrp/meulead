@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
+import { Upload } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { importLeads, type LeadInput } from "@/app/dashboard/lists/[id]/actions";
@@ -57,7 +58,8 @@ export function ImportCsvDialog({ listId }: { listId: string }) {
       description="Colunas aceitas: nome, empresa, telefone/whatsapp, e-mail (em PT ou EN)."
       trigger={(open) => (
         <Button variant="outline" onClick={open}>
-          ⭱ Importar CSV
+          <Upload className="h-4 w-4" />
+          Importar CSV
         </Button>
       )}
     >

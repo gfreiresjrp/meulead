@@ -1,5 +1,9 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { isAdmin } from "@/lib/admin";
+
+// Plano máximo — o admin da plataforma sempre o tem, sem vencimento.
+const PLANO_ADMIN = "scale";
 
 export interface ActiveOrg {
   orgId: string;
@@ -36,14 +40,16 @@ export const getActiveOrg = cache(async (): Promise<ActiveOrg | null> => {
     .eq("id", membership.organizacao_id)
     .maybeSingle();
 
+  const admin = isAdmin(user.email);
+
   return {
     orgId: membership.organizacao_id,
     orgName: org?.nome ?? "Minha empresa",
     email: user.email ?? "—",
-    plano: org?.plano ?? "free",
+    plano: admin ? PLANO_ADMIN : (org?.plano ?? "free"),
     creditosPlano: org?.creditos_plano ?? 0,
     creditosExtra: org?.creditos_extra ?? 0,
     creditosRenovamEm: org?.creditos_renovam_em ?? new Date().toISOString(),
-    planoExpiraEm: org?.plano_expira_em ?? null,
+    planoExpiraEm: admin ? null : (org?.plano_expira_em ?? null),
   };
 });

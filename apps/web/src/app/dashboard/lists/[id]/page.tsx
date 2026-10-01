@@ -7,6 +7,8 @@ import { LeadsTable } from "@/components/LeadsTable";
 import { AddLeadDialog } from "@/components/AddLeadDialog";
 import { ImportCsvDialog } from "@/components/ImportCsvDialog";
 import { AutoRefresh } from "@/components/AutoRefresh";
+import { UpgradeDialog } from "@/components/UpgradeDialog";
+import { Download } from "lucide-react";
 import { sourceLabel } from "@/lib/sources";
 
 export default async function ListDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -58,6 +60,26 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
           </p>
         </div>
         <div className="flex gap-2">
+          {org && org.plano !== "free" ? (
+            <a
+              href={`/dashboard/lists/${id}/exportar`}
+              download
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-all duration-150 hover:bg-neutral-50 active:scale-[0.98] dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
+            >
+              <Download className="h-4 w-4" />
+              Exportar planilha
+            </a>
+          ) : (
+            <UpgradeDialog
+              planoAtual={org?.plano ?? "free"}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-500 shadow-sm transition hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+            >
+              🔒 Exportar planilha
+              <span className="rounded-full bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
+                Starter+
+              </span>
+            </UpgradeDialog>
+          )}
           <ImportCsvDialog listId={id} />
           <AddLeadDialog listId={id} />
         </div>
